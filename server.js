@@ -11,7 +11,7 @@ const CLIENT_ID = "williamo2.ali.1987@gmail.com-api-client";
 const CLIENT_SECRET = "ML5Hgrkh0GyIsONmSywQqYYzKzAr9cWF";
 
 async function getAccessToken() {
-   const url = 'https://opensky-network.org/api/states/all?lamin=30.0&lomin=31.0&lamax=30.5&lomax=31.5';
+    const tokenUrl = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token";
     
     const params = new URLSearchParams();
     params.append('grant_type', 'client_credentials');
@@ -30,7 +30,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/flights', async (req, res) => {
-    const url = 'https://opensky-network.org/api/states/all?lamin=20.0&lomin=30.0&lamax=35.0&lomax=45.0';
+    // Small geographical boundary to keep response data lightweight
+    const url = 'https://opensky-network.org/api/states/all?lamin=30.0&lomin=31.0&lamax=30.5&lomax=31.5';
 
     try {
         const token = await getAccessToken();
