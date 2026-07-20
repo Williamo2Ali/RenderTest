@@ -30,8 +30,12 @@ app.get('/', (req, res) => {
 });
 
 app.get('/flights', async (req, res) => {
-    // A slightly wider boundary to ensure we catch flights, but we will filter them below
-    const url = 'https://opensky-network.org/api/states/all?lamin=20.0&lomin=30.0&lamax=35.0&lomax=45.0';
+    // استخدام مسار الرحلات القادمة لمطار محدد (مثال: HECA) لتخفيف العبء وسرعة الاستجابة
+    const airport = 'HECA'; 
+    const now = Math.floor(Date.now() / 1000);
+    const oneDayAgo = now - (24 * 60 * 60); // آخر 24 ساعة
+    
+    const url = `https://opensky-network.org/api/flights/arrival?airport=${airport}&begin=${oneDayAgo}&end=${now}`;
 
     try {
         const token = await getAccessToken();
@@ -42,22 +46,9 @@ app.get('/flights', async (req, res) => {
             }
         });
 
-        const allStates = response.data.states || [];
-        
-        // Filter and map the data to keep it extremely lightweight (Limit to 10 flights)
-        const limitedFlights = allStates.slice(0, 10).map(flight => {
-            return {
-                icao24: flight[0],
-                callsign: flight[1] ? flight[1].trim() : 'UNKNOWN',
-                origin_country: flight[2],
-                longitude: flight[5],
-                latitude: flight[6],
-                altitude: flight[7],
-                velocity: flight[9]
-            };
-        });
-
-        res.json(limitedFlights);
+        // تحديد أول 10 رحلات فقط لضمان الخفة الكاملة
+        const data = response.data || [];
+        res.json(data.slice(0, 10));
     } catch (error) {
         res.status(500).json({ 
             error: "Connection failed", 
