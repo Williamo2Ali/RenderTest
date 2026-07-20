@@ -30,10 +30,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/flights', async (req, res) => {
-    // استخدام مسار الرحلات القادمة لمطار محدد (مثال: HECA) لتخفيف العبء وسرعة الاستجابة
+       
     const airport = 'HECA'; 
     const now = Math.floor(Date.now() / 1000);
-    const oneDayAgo = now - (24 * 60 * 60); // آخر 24 ساعة
+    const oneDayAgo = now - (24 * 60 * 60);    
     
     const url = `https://opensky-network.org/api/flights/arrival?airport=${airport}&begin=${oneDayAgo}&end=${now}`;
 
@@ -46,7 +46,7 @@ app.get('/flights', async (req, res) => {
             }
         });
 
-        // تحديد أول 10 رحلات فقط لضمان الخفة الكاملة
+          
         const data = response.data || [];
         res.json(data.slice(0, 10));
     } catch (error) {
