@@ -2,9 +2,9 @@
   "name": "opensky-backend",
   "version": "1.0.0",
   "description": "Flight Radar Backend",
-  "main": "server.js",
+  "main": "./server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node ./server.js"
   },
   "engines": {
     "node": ">=18.0.0"
